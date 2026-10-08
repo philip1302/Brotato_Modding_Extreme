@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install gdtoolkit 3.x
+        # gdtoolkit 3 imports pkg_resources, which newer setuptools no longer ships
+        run: pip install "gdtoolkit==3.*" "setuptools<81"
+
+      - name: Lint
+        run: bash scripts/lint.sh
+
+      - name: Package mods
+        run: bash scripts/package.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mods
+          path: dist/*.zip

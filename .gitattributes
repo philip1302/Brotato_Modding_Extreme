@@ -1,0 +1,21 @@
+# Textdateien immer mit LF (Windows-Host + Linux-Container)
+* text=auto eol=lf
+
+*.sh     text eol=lf
+*.gd     text eol=lf
+*.tres   text eol=lf
+*.tscn   text eol=lf
+*.json   text eol=lf
+*.csv    text eol=lf
+*.import text eol=lf
+
+# Binärdateien
+*.png         binary
+*.jpg         binary
+*.webp        binary
+*.ogg         binary
+*.wav         binary
+*.ttf         binary
+*.otf         binary
+*.translation binary
+*.zip         binary
