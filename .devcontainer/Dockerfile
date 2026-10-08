@@ -59,13 +59,18 @@ RUN ARCH=$(dpkg --print-architecture) && \
   rm "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb"
 
 # --- Brotato modding tools ---------------------------------------------------
-# Godot 3.5.x headless (Brotato is built on Godot 3.5) for CLI validation/export
-ARG GODOT_VERSION=3.5.3
-RUN wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip" -O /tmp/godot.zip && \
-  unzip -q /tmp/godot.zip -d /tmp/godot && \
-  mv "/tmp/godot/Godot_v${GODOT_VERSION}-stable_linux_headless.64" /usr/local/bin/godot && \
+# Godot 3.x headless for CLI validation/export. Must match the engine of Brotato.pck
+# (Brotato 1.1.15.4 = "3.7.dev.custom_build"). GODOT_VERSION is a godot-builds release tag, e.g. 3.7-dev1 or 3.6.3-stable.
+ARG GODOT_VERSION=3.7-dev1
+RUN cd /tmp && \
+  base="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}" && \
+  file="Godot_v${GODOT_VERSION}_linux_headless.64.zip" && \
+  wget -q "${base}/${file}" "${base}/SHA512-SUMS.txt" && \
+  grep " ${file}$" SHA512-SUMS.txt | sha512sum -c - && \
+  unzip -q "${file}" -d /tmp/godot && \
+  mv "/tmp/godot/Godot_v${GODOT_VERSION}_linux_headless.64" /usr/local/bin/godot && \
   chmod +x /usr/local/bin/godot && \
-  rm -rf /tmp/godot /tmp/godot.zip
+  rm -rf /tmp/godot "/tmp/${file}" /tmp/SHA512-SUMS.txt
 
 # gdtoolkit 3.x = gdlint/gdformat for GDScript 3 (Godot 3.x)
 # gdtoolkit 3 imports pkg_resources, which newer setuptools no longer ships

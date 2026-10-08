@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Lint + Formatprüfung aller GDScript-Dateien unter mods-unpacked/ (gdtoolkit 3.x / Godot 3)
+# Lint + Formatprüfung aller GDScript-Dateien unter mods-unpacked/ und scripts/godot/ (gdtoolkit 3.x / Godot 3)
 # Nutzung: scripts/lint.sh [--fix]
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-mapfile -t files < <(find mods-unpacked -name '*.gd' -type f | sort)
+mapfile -t files < <(find mods-unpacked scripts/godot -name '*.gd' -type f | sort)
 if [ ${#files[@]} -eq 0 ]; then
     echo "Keine .gd-Dateien gefunden."
     exit 0
