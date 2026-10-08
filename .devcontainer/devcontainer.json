@@ -32,7 +32,7 @@
           "editor.tabSize": 4
         },
         "godotTools.lsp.serverHost": "host.docker.internal",
-        "godotTools.lsp.serverPort": 6005,
+        "godotTools.lsp.serverPort": 6008,
         "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.profiles.linux": {
           "bash": {

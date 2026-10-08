@@ -24,15 +24,26 @@ vertrauenswürdige Repos verwenden.
 Brotato mit GDRE Tools (Full Recovery) nach `vanilla/` im Repo exportieren. Der Ordner ist per `.gitignore` ausgeschlossen
 und darf **niemals** committet werden.
 
+Danach im Container:
+```sh
+scripts/fetch-deps.sh     # ContentLoader + Brotils -> vanilla/mods-unpacked/
+scripts/link-mods.sh      # vanilla/mods-unpacked/<Mod> -> ../../mods-unpacked/<Mod>
+scripts/check-vanilla.sh  # headless importieren, Skriptfehler auflisten
+```
+Anschließend `vanilla/project.godot` im Godot-Editor auf Windows öffnen und mit F5 starten.
+
 ## Arbeitsablauf
 | Aufgabe | Befehl |
 |---|---|
 | Neuen Mod anlegen | `scripts/new-mod.sh <Namespace> <Name>` |
 | Lint/Format prüfen | `scripts/lint.sh` (`--fix` zum Formatieren) |
 | Zip bauen | `scripts/package.sh [Namespace-Name]` → `dist/` |
+| ContentLoader + Brotils nach `vanilla/mods-unpacked/` holen | `scripts/fetch-deps.sh` |
+| Eigene Mods ins Projekt verlinken | `scripts/link-mods.sh` |
+| Dekompiliertes Projekt headless auf Skriptfehler prüfen | `scripts/check-vanilla.sh` |
 
-**Godot-LSP:** Godot-Editor auf Windows starten (Projekt mit `vanilla/` + `mods-unpacked/`). Die Erweiterung
-`godot-tools` im Container verbindet sich über `host.docker.internal:6005`.
+**Godot-LSP:** Godot-Editor auf Windows mit `vanilla/project.godot` starten. Die Erweiterung `godot-tools` im Container
+verbindet sich über `host.docker.internal:6008` (Standardport der LSP in Godot 3.x).
 
 **Im Spiel testen:** Zip aus `dist/` (oder einen Godot-Export bei Mods mit Assets) nach
 `<Brotato>/mods/` kopieren und Brotato starten. Die Logs liegen unter `%APPDATA%\Brotato\logs\modloader.log`.

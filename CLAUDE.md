@@ -7,7 +7,7 @@ GodotModding **ModLoader 6.x** und **Darkly77-ContentLoader** (+ Brotils).
 - Devcontainer (Anthropic-Referenz) mit Firewall-Allowlist (`.devcontainer/init-firewall.sh`).
   Neue Domains nur dort eintragen und Container neu bauen.
 - Im Container: `godot` (3.5.3 headless), `gdlint`/`gdformat` (gdtoolkit 3.x), `jq`, `zip`, `gh`.
-- Godot-Editor und Spieltests laufen auf dem **Windows-Host**. Die Godot-LSP ist im Container über `host.docker.internal:6005` erreichbar.
+- Godot-Editor und Spieltests laufen auf dem **Windows-Host**. Die Godot-LSP ist im Container über `host.docker.internal:6008` erreichbar (Godot-3-Standard).
 
 ## Struktur
 - `mods-unpacked/<Namespace>-<Name>/` – ein Ordner pro Mod; der Name muss `namespace-name` aus der `manifest.json` entsprechen.
@@ -23,6 +23,9 @@ GodotModding **ModLoader 6.x** und **Darkly77-ContentLoader** (+ Brotils).
 - `scripts/package.sh [Mod]` – erzeugt `dist/<Mod>.zip` (nur für Skript-/Daten-Mods; Mods mit importierten Assets
   über den Godot-Editor exportieren).
 - `scripts/new-mod.sh <Namespace> <Name>` – legt einen neuen Mod aus dem Starter an.
+- `scripts/fetch-deps.sh` / `scripts/link-mods.sh` – Drittanbieter-Mods bzw. eigene Mods (Symlink) nach
+  `vanilla/mods-unpacked/`. Drittanbieter-Mods gehören nie nach `mods-unpacked/`.
+- `scripts/check-vanilla.sh` – dekompiliertes Projekt headless importieren und Skriptfehler auflisten.
 
 ## Konventionen
 - GDScript 3: `extends`-Script-Extensions rufen `.original_method()` auf, statt Vanilla-Code zu kopieren.

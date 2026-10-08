@@ -31,6 +31,7 @@ Stand: 2026-10-08. Wir haben einen Devcontainer, Lint/CI, Hilfsskripte und einen
 
 ### Schritt 3: Projekt im Editor öffnen
 - [ ] Godot 3.5.x → Import → `vanilla/project.godot`. Der erste Import dauert.
+- [ ] Vorab im Container: `scripts/check-vanilla.sh` (headless Import, listet Parse-Fehler)
 - [ ] Fehlerausgabe sammeln. Bekannte Stolpersteine bei dekompilierten Spielen:
   - Engine-Module oder Singletons, die es nur im Spiel-Build gibt (z. B. Steam-Integration). Fehlen sie im Standard-Godot,
     brechen Skripte beim Parsen ab. Abhilfe ist ein Stub/Guard **nur lokal in `vanilla/`**, nie im Repo.
@@ -45,15 +46,15 @@ Im Editor lädt der ModLoader Mods aus `res://mods-unpacked/`, also `vanilla/mod
   So bleiben sie außerhalb von Git und werden nicht von `lint.sh`/`package.sh` erfasst.
 - Unsere Mods werden **pro Mod** per relativem Symlink eingehängt:
   `vanilla/mods-unpacked/Philip1302-ExtremeStarter -> ../../mods-unpacked/Philip1302-ExtremeStarter`
-- [ ] Skript `scripts/link-mods.sh` schreiben (legt die Links für alle Mods an)
+- [x] Skript `scripts/link-mods.sh` schreiben (legt die Links für alle Mods an)
 - [ ] Testen, ob Godot auf Windows WSL-Symlinks über `\\wsl$` folgt. Falls nicht, braucht es einen
       Fallback (Windows-Symlink mit `mklink /D` oder ein Sync-Skript).
-- [ ] ContentLoader + Brotils von GitHub holen (GitHub ist in der Firewall erlaubt) und nach `vanilla/mods-unpacked/` entpacken
+- [x] Skript `scripts/fetch-deps.sh`: ContentLoader v6.2.3 + Brotils v1.1.2 von GitHub nach `vanilla/mods-unpacked/`
+- [ ] Beide Skripte nach dem Dekompilieren ausführen
 
 ### Schritt 5: LSP-Anbindung Container ↔ Editor
-- [ ] **Port prüfen:** Godot **3.x** nutzt für die LSP standardmäßig Port **6008**, 6005 ist der Default von Godot 4.
-      Entweder in Godot *Editor Settings → Network → Language Server → Remote Port* auf 6005 stellen oder
-      `godotTools.lsp.serverPort` in `devcontainer.json` auf 6008 ändern.
+- [x] **Port:** `godotTools.lsp.serverPort` in `devcontainer.json` auf 6008 gesetzt (Godot-3-Standard, Godot 4 nutzt 6005).
+      Container neu bauen bzw. Fenster neu laden, damit die Einstellung greift.
 - [ ] Prüfen, ob die LSP nur auf `127.0.0.1` lauscht. In dem Fall ist sie aus dem Container nicht erreichbar, dann
       Remote Host anpassen bzw. eine Windows-Firewall-Regel für den Port anlegen.
 - [ ] Test im Container: `nc -zv host.docker.internal <port>` und Autocomplete in einer `.gd`-Datei
