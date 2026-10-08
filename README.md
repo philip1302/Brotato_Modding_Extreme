@@ -6,7 +6,7 @@ VS-Code-Devcontainer nach der [Claude-Code-Referenzkonfiguration von Anthropic](
 ## Voraussetzungen (Windows-Host)
 - WSL2 + Docker Desktop (WSL-Integration aktiv)
 - VS Code mit den Erweiterungen **WSL** und **Dev Containers**
-- Brotato (Steam) und **Godot 3.5.3** (Standard, nicht .NET) für Editor und Spieltests
+- Brotato (Steam) und **Godot 3.7-dev1** (Standard, nicht .NET; muss zur Engine von `Brotato.pck` passen) für Editor und Spieltests
 - [GDRE Tools](https://github.com/bruvzg/gdsdecomp) zum Dekompilieren von Brotato (nur lokal als Referenz)
 - Im Spiel/Workshop: **ModLoader** (in Brotato integriert), **Darkly77-ContentLoader**, **Darkly77-Brotils**
 
@@ -24,15 +24,28 @@ vertrauenswürdige Repos verwenden.
 Brotato mit GDRE Tools (Full Recovery) nach `vanilla/` im Repo exportieren. Der Ordner ist per `.gitignore` ausgeschlossen
 und darf **niemals** committet werden.
 
+Danach im Container:
+```sh
+scripts/patch-vanilla.sh  # lokale Fixes: Steam-Feature-Tag, fehlendes Plugin resave_scenes
+scripts/fetch-deps.sh     # ContentLoader + Brotils -> vanilla/mods-unpacked/
+scripts/link-mods.sh      # vanilla/mods-unpacked/<Mod> -> ../../mods-unpacked/<Mod>
+scripts/check-vanilla.sh  # headless importieren, jedes Skript kompilieren
+```
+Anschließend `vanilla/project.godot` im Godot-Editor auf Windows öffnen und mit F5 starten.
+
 ## Arbeitsablauf
 | Aufgabe | Befehl |
 |---|---|
 | Neuen Mod anlegen | `scripts/new-mod.sh <Namespace> <Name>` |
 | Lint/Format prüfen | `scripts/lint.sh` (`--fix` zum Formatieren) |
 | Zip bauen | `scripts/package.sh [Namespace-Name]` → `dist/` |
+| ContentLoader + Brotils nach `vanilla/mods-unpacked/` holen | `scripts/fetch-deps.sh` |
+| Eigene Mods ins Projekt verlinken | `scripts/link-mods.sh` |
+| Lokale Fixes am dekompilierten Projekt | `scripts/patch-vanilla.sh` |
+| Dekompiliertes Projekt headless auf Skriptfehler prüfen | `scripts/check-vanilla.sh` |
 
-**Godot-LSP:** Godot-Editor auf Windows starten (Projekt mit `vanilla/` + `mods-unpacked/`). Die Erweiterung
-`godot-tools` im Container verbindet sich über `host.docker.internal:6005`.
+**Godot-LSP:** Godot-Editor auf Windows mit `vanilla/project.godot` starten. Die Erweiterung `godot-tools` im Container
+verbindet sich über `host.docker.internal:6008` (Standardport der LSP in Godot 3.x).
 
 **Im Spiel testen:** Zip aus `dist/` (oder einen Godot-Export bei Mods mit Assets) nach
 `<Brotato>/mods/` kopieren und Brotato starten. Die Logs liegen unter `%APPDATA%\Brotato\logs\modloader.log`.

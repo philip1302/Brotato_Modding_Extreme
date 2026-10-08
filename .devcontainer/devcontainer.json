@@ -7,7 +7,7 @@
       "CLAUDE_CODE_VERSION": "latest",
       "GIT_DELTA_VERSION": "0.18.2",
       "ZSH_IN_DOCKER_VERSION": "1.2.0",
-      "GODOT_VERSION": "3.5.3",
+      "GODOT_VERSION": "3.7-dev1",
       "GDTOOLKIT_VERSION": "3.*"
     }
   },
@@ -32,7 +32,7 @@
           "editor.tabSize": 4
         },
         "godotTools.lsp.serverHost": "host.docker.internal",
-        "godotTools.lsp.serverPort": 6005,
+        "godotTools.lsp.serverPort": 6008,
         "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.profiles.linux": {
           "bash": {
